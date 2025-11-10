@@ -28,7 +28,7 @@ export default function EditBlog() {
     try {
       await axios.put(`${backendURL}/api/blogs/update/${id}`, formData)
       alert("Blog updated!");
-      window.location.href = "/blogs";
+      window.location.href = `${backendURL}/blogs`;
     } catch (err) {
       console.error(err);
       alert("Error updating blog");

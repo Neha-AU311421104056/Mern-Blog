@@ -14,7 +14,7 @@ export default function Login() {
       });
       localStorage.setItem("currentUser", JSON.stringify(res.data.user));
       alert("Admin login successful!");
-      window.location.href = "/blogs";
+      window.location.href = `${backendURL}/blogs`;
     } catch (err) {
       console.error(err);
       alert(err.response?.data?.message || "Login failed");
