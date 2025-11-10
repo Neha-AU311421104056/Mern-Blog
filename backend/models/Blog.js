@@ -1,13 +1,17 @@
-const mongoose = require("mongoose");   // import mongoose
+import mongoose from "mongoose";
 
-const blogSchema = new mongoose.Schema(  // create schema (blueprint)
+const blogSchema = new mongoose.Schema(
   {
-    title: { type: String, required: true },
-    content: { type: String, required: true },   // blog content
-    author: String,      // blog author
-    image: String        // image URL
+    title: String,
+    content: String,
+    author: String,
+    imageUrl: String,
   },
-  { timestamps: true }   // auto createdAt + updatedAt
+  { timestamps: true }
 );
 
-module.exports = mongoose.model("Blog", blogSchema);  // export model
+export default mongoose.model("Blog", blogSchema);
+
+
+
+

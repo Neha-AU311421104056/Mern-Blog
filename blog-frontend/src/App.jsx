@@ -1,44 +1,50 @@
 import { Routes, Route, Link } from "react-router-dom";
 import Home from "./pages/Home";
 import Blogs from "./pages/Blogs";
-import About from "./pages/About";
-import Contact from "./pages/Contact";
-import Signin from "./pages/Signin";
+import CreateBlog from "./pages/CreateBlog";
+import EditBlog from "./pages/EditBlog";
 import Login from "./pages/Login";
+import About from "./pages/About"; 
+import Contact from "./pages/Contact";
+
+import "./index.css";
 
 export default function App() {
-  return (
-    <div>
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
-      {/* ✅ NAVBAR */}
-      <nav
-        style={{
-          display: "flex",
-          gap: "20px",
-          padding: "15px",
-          background: "#f2f2f2",
-          fontSize: "18px",
-        }}
-      >
+  const handleLogout = () => {
+    localStorage.removeItem("currentUser");
+    window.location.reload();
+  };
+
+  return (
+    <>
+      <nav className="navbar">
         <Link to="/">Home</Link>
         <Link to="/blogs">Blogs</Link>
-        <Link to="/about">About</Link>
+         <Link to="/about">About</Link> 
         <Link to="/contact">Contact</Link>
-        <Link to="/signin">Sign In</Link>
-        <Link to="/login">Login</Link>
+
+        {!currentUser && <Link to="/login">Admin Login</Link>}
+        {currentUser && currentUser.role === "admin" && (
+          <>
+            <span className="user-badge">Hi {currentUser.username}</span>
+            <button className="logout-btn" onClick={handleLogout}>Logout</button>
+          </>
+        )}
+        
       </nav>
 
-      {/* ✅ ROUTES */}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/blogs" element={<Blogs />} />
-        <Route path="/about" element={<About />} />
+        <Route path="/create" element={<CreateBlog />} />
+        <Route path="/about" element={<About />} /> 
         <Route path="/contact" element={<Contact />} />
-        <Route path="/signin" element={<Signin />} />
+        <Route path="/edit/:id" element={<EditBlog />} />
         <Route path="/login" element={<Login />} />
       </Routes>
-
-    </div>
+    </>
   );
 }
 

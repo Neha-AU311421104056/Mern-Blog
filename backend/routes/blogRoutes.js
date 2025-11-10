@@ -1,34 +1,89 @@
-const express = require("express")
-const Blog = require("../models/Blog")
+import express from "express";
+import multer from "multer";
+import Blog from "../models/Blog.js";
+import { storage } from "../config/cloudinary.js";
+
 const router = express.Router();
+const upload = multer({ storage });
 
-router.get("/",async (request,response) =>{
+// Create blog (anyone)
+router.post("/", upload.single("image"), async (req, res) => {
+  try {
+    const { title, content, author } = req.body;
+    if (!req.file) return res.status(400).json({ error: "No file uploaded" });
 
-  const blogs = await Blog.find();
-  response.json(blogs)
+    const blog = new Blog({
+      title,
+      content,
+      author: author || "Anonymous",
+      imageUrl: req.file.path,
+    });
 
-})
+    await blog.save();
+    res.json({ message: "Blog created", blog });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to create blog" });
+  }
+});
 
-router.post("/",async (request,response) =>{
+// Get all blogs
+router.get("/", async (req, res) => {
+  const blogs = await Blog.find().sort({ createdAt: -1 });
+  res.json(blogs);
+});
 
- const newBlog = new Blog(request.body)
- await newBlog.save()
- response.json({message: "Blog created succesfully"})
+// Get single blog
+router.get("/:id", async (req, res) => {
+  try {
+    const blog = await Blog.findById(req.params.id);
+    if (!blog) return res.status(404).json({ error: "Blog not found" });
+    res.json(blog);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch blog" });
+  }
+});
 
-})
+// Update blog (admin only)
+router.put("/update/:id", upload.single("image"), async (req, res) => {
+  try {
+    const { adminPassword, title, content, author } = req.body;
+    if (adminPassword !== "admin123") return res.status(403).json({ message: "Not allowed" });
 
-router.put("/:id", async (request,response) =>{
-  await Blog.findByIdAndUpdate(request.params.id, request.body )
-  response.json({message: "Blog updated succesfully"})
-})
+    const blog = await Blog.findById(req.params.id);
+    if (!blog) return res.status(404).json({ error: "Blog not found" });
 
-router.delete("/:id", async(request,response) =>{
+    blog.title = title;
+    blog.content = content;
+    blog.author = author;
 
-  await Blog.findByIdAndDelete(request.params.id)
-  response.json({message: "Blog deleted succesfully"})
+    if (req.file) blog.imageUrl = req.file.path;
 
-})
+    await blog.save();
+    res.json(blog);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Update failed" });
+  }
+});
+
+// Delete blog (admin only)
+router.delete("/delete/:id", async (req, res) => {
+  try {
+    const { adminPassword } = req.body;
+    if (adminPassword !== "admin123") return res.status(403).json({ message: "Not allowed" });
+
+    await Blog.findByIdAndDelete(req.params.id);
+    res.json({ message: "Blog deleted" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to delete blog" });
+  }
+});
+
+export default router;
 
 
 
-module.exports = router;
+
+
