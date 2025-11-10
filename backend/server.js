@@ -30,16 +30,6 @@ app.get("/api/test", (req, res) => res.send("Backend is running!"));
 app.use("/api/blogs", blogRoutes);
 app.use("/api/users", authRoutes);
 
-// Serve frontend in production (safe version)
-if (process.env.NODE_ENV === "production") {
-  const frontendPath = path.join(__dirname, "../frontend/build");
-  app.use(express.static(frontendPath));
-
-  // Only catch GET requests that are not API routes
-  app.get(/^\/(?!api).*/, (req, res) => {
-    res.sendFile(path.join(frontendPath, "index.html"));
-  });
-}
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
