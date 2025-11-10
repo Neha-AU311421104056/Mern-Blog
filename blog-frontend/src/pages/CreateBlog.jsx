@@ -19,7 +19,7 @@ export default function CreateBlog() {
     try {
       await axios.post(`${backendURL}/api/blogs`, formData)
       alert("Blog created!");
-      window.location.href = "/blogs";
+      window.location.href = `${backendURL}/blogs`;
     } catch (err) {
       console.error(err);
       alert("Error creating blog");
