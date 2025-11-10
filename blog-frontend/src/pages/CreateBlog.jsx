@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-
+const backendURL = "https://heathylifeblogbackend.onrender.com";
 export default function CreateBlog() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -17,7 +17,7 @@ export default function CreateBlog() {
     formData.append("image", image);
 
     try {
-      await axios.post("/api/blogs", formData)
+      await axios.post(`${backendURL}/api/blogs`, formData)
       alert("Blog created!");
       window.location.href = "/blogs";
     } catch (err) {

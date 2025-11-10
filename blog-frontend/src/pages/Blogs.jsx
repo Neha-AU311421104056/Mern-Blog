@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-
+const backendURL = "https://heathylifeblogbackend.onrender.com";
 export default function Blogs() {
   const [blogs, setBlogs] = useState([]);
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
@@ -15,7 +15,7 @@ const handleDelete = async (id) => {
   if (!window.confirm("Are you sure you want to delete this blog?")) return;
 
   try {
-    await fetch(`/api/blogs/delete/${id}`, {
+    await fetch(`${backendURL}/api/blogs/delete/${id}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ adminPassword: "admin123" }),

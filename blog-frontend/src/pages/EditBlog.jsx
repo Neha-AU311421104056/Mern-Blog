@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-
+const backendURL = "https://heathylifeblogbackend.onrender.com";
 export default function EditBlog() {
   const { id } = useParams();
   const [blog, setBlog] = useState(null);
   const [image, setImage] = useState(null);
 
   useEffect(() => {
-    fetch(`/api/blogs/${id}`)
+    fetch(`${backendURL}/api/blogs/${id}`)
       .then((res) => res.json())
       .then((data) => setBlog(data));
   }, [id]);
@@ -26,7 +26,7 @@ export default function EditBlog() {
     if (image) formData.append("image", image);
 
     try {
-      await axios.put("/api/blogs/update/${id}", formData)
+      await axios.put(`${backendURL}/api/blogs/update/${id}`, formData)
       alert("Blog updated!");
       window.location.href = "/blogs";
     } catch (err) {

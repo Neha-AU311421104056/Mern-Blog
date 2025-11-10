@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-
+const backendURL = "https://heathylifeblogbackend.onrender.com";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -8,7 +8,7 @@ export default function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("/api/users/login", {
+      const res = await axios.post(`${backendURL}/api/users/login`, {
         email,
         password,
       });
