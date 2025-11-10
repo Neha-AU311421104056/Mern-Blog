@@ -1,11 +1,16 @@
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";   // ✅ Add this
+
 const backendURL = "https://heathylifeblogbackend.onrender.com";
+
 export default function CreateBlog() {
+  const navigate = useNavigate();  // ✅ Add this
+
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [image, setImage] = useState(null);
-  const [author, setAuthor] = useState("Anonymous"); // default author
+  const [author, setAuthor] = useState("Anonymous");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,9 +22,11 @@ export default function CreateBlog() {
     formData.append("image", image);
 
     try {
-      await axios.post(`${backendURL}/api/blogs`, formData)
+      await axios.post(`${backendURL}/api/blogs`, formData);
+
       alert("Blog created!");
-      window.location.href = `${backendURL}/blogs`;
+      navigate("/blogs");     // ✅ Redirect to frontend, not backend
+
     } catch (err) {
       console.error(err);
       alert("Error creating blog");
@@ -29,9 +36,11 @@ export default function CreateBlog() {
   return (
     <div className="form-container">
       <center>
-      <h1>Create Blog</h1>
+        <h1>Create Blog</h1>
       </center>
+
       <form onSubmit={handleSubmit}>
+        
         <div>
           <label htmlFor="title">Title</label>
           <input
@@ -75,10 +84,10 @@ export default function CreateBlog() {
 
         <button type="submit">Create Blog</button>
       </form>
-      
     </div>
   );
 }
+
 
 
 

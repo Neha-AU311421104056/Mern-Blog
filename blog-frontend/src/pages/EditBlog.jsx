@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";   // ✅ added navigate
 import axios from "axios";
+
 const backendURL = "https://heathylifeblogbackend.onrender.com";
+
 export default function EditBlog() {
   const { id } = useParams();
+  const navigate = useNavigate();   // ✅ for frontend routing
+
   const [blog, setBlog] = useState(null);
   const [image, setImage] = useState(null);
 
@@ -26,9 +30,11 @@ export default function EditBlog() {
     if (image) formData.append("image", image);
 
     try {
-      await axios.put(`${backendURL}/api/blogs/update/${id}`, formData)
+      await axios.put(`${backendURL}/api/blogs/update/${id}`, formData);
+
       alert("Blog updated!");
-      window.location.href = `${backendURL}/blogs`;
+      navigate("/blogs");      // ✅ FIX: redirect to frontend, not backend
+
     } catch (err) {
       console.error(err);
       alert("Error updating blog");
@@ -42,6 +48,7 @@ export default function EditBlog() {
       <p>Last Updated: {new Date(blog.updatedAt).toLocaleString()}</p>
 
       <form onSubmit={handleUpdate}>
+        
         <div>
           <label htmlFor="title">Title</label>
           <input

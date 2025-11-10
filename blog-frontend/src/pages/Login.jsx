@@ -1,7 +1,12 @@
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 const backendURL = "https://heathylifeblogbackend.onrender.com";
+
 export default function Login() {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -12,9 +17,11 @@ export default function Login() {
         email,
         password,
       });
+
       localStorage.setItem("currentUser", JSON.stringify(res.data.user));
       alert("Admin login successful!");
-      window.location.href = `${backendURL}/blogs`;
+
+      navigate("/blogs"); // ✅ FIXED
     } catch (err) {
       console.error(err);
       alert(err.response?.data?.message || "Login failed");
@@ -24,7 +31,7 @@ export default function Login() {
   return (
     <div className="form-container">
       <center>
-      <h2>Admin Login</h2><br></br>
+        <h2>Admin Login</h2><br />
       </center>
       <form onSubmit={handleLogin}>
         <div>
@@ -48,7 +55,7 @@ export default function Login() {
             required
           />
         </div>
-        <br></br>
+        <br />
         <button type="submit">Login</button>
       </form>
     </div>
