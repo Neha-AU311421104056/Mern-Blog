@@ -1,32 +1,35 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
 const backendURL = "https://heathylifeblogbackend.onrender.com";
+
 export default function Blogs() {
   const [blogs, setBlogs] = useState([]);
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const navigate = useNavigate();   // ✅ added
 
- useEffect(() => {
-  fetch(`${backendURL}/api/blogs`)
-    .then((res) => res.json())
-    .then((data) => setBlogs(data));
-}, []);
+  useEffect(() => {
+    fetch(`${backendURL}/api/blogs`)
+      .then((res) => res.json())
+      .then((data) => setBlogs(data));
+  }, []);
 
-const handleDelete = async (id) => {
-  if (!window.confirm("Are you sure you want to delete this blog?")) return;
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this blog?")) return;
 
-  try {
-    await fetch(`${backendURL}/api/blogs/delete/${id}`, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ adminPassword: "admin123" }),
-    });
-    setBlogs(blogs.filter((b) => b._id !== id));
-  } catch (err) {
-    console.error(err);
-    alert("Delete failed");
-  }
-};
+    try {
+      await fetch(`${backendURL}/api/blogs/delete/${id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ adminPassword: "admin123" }),
+      });
 
+      setBlogs(blogs.filter((b) => b._id !== id));
+    } catch (err) {
+      console.error(err);
+      alert("Delete failed");
+    }
+  };
 
   return (
     <div className="blogs-container">
@@ -45,8 +48,19 @@ const handleDelete = async (id) => {
 
           {currentUser?.role === "admin" && (
             <div className="btn-row">
-              <button onClick={() => window.location.href = `/edit/${blog._id}`} className="edit-btn">Edit</button>
-              <button onClick={() => handleDelete(blog._id)} className="delete-btn">Delete</button>
+              <button
+                onClick={() => navigate(`/edit/${blog._id}`)}   // ✅ FIXED
+                className="edit-btn"
+              >
+                Edit
+              </button>
+
+              <button
+                onClick={() => handleDelete(blog._id)}
+                className="delete-btn"
+              >
+                Delete
+              </button>
             </div>
           )}
         </div>
@@ -54,5 +68,6 @@ const handleDelete = async (id) => {
     </div>
   );
 }
+
 
 
