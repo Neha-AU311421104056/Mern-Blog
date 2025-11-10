@@ -12,7 +12,7 @@ export default function EditBlog() {
   const [image, setImage] = useState(null);
 
   useEffect(() => {
-    fetch(`${backendURL}/api/blogs/get/${id}`)
+    fetch(`${backendURL}/api/blogs/${id}`)
       .then((res) => res.json())
       .then((data) => setBlog(data));
   }, [id]);
