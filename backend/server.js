@@ -24,7 +24,10 @@ mongoose.connect(process.env.MONGO_URL)
   .catch((err) => console.log("❌ MongoDB Error:", err));
 
 // API test route
-app.get("/api/test", (req, res) => res.send("Backend is running!"));
+app.get("/", (req, res) => {
+  res.send("Backend is running ✅");
+});
+
 
 // Routes
 app.use("/api/blogs", blogRoutes);
