@@ -6,7 +6,7 @@ export default function Blogs() {
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
  useEffect(() => {
-  fetch("/api/blogs")
+  fetch(`${backendURL}/api/blogs`)
     .then((res) => res.json())
     .then((data) => setBlogs(data));
 }, []);
