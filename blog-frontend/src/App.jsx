@@ -1,5 +1,5 @@
 import { Routes, Route, Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Home from "./pages/Home";
 import Blogs from "./pages/Blogs";
 import CreateBlog from "./pages/CreateBlog";
@@ -9,15 +9,25 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 
 export default function App() {
-  const navigate = useNavigate(); // ✅ useNavigate now works
+  const navigate = useNavigate();
+
   const [currentUser, setCurrentUser] = useState(
     JSON.parse(localStorage.getItem("currentUser"))
   );
 
+  // optional: keep in sync with localStorage changes
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setCurrentUser(JSON.parse(localStorage.getItem("currentUser")));
+    };
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
+
   const handleLogout = () => {
     localStorage.removeItem("currentUser");
-    setCurrentUser(null);
-    navigate("/"); // redirect to home
+    setCurrentUser(null);  // ✅ update state
+    navigate("/");          // ✅ redirect to Home
   };
 
   return (
@@ -41,16 +51,17 @@ export default function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/blogs" element={<Blogs />} />
+        <Route path="/blogs" element={<Blogs currentUser={currentUser} />} />
         <Route path="/create" element={<CreateBlog />} />
         <Route path="/about" element={<About />} /> 
         <Route path="/contact" element={<Contact />} />
         <Route path="/edit/:id" element={<EditBlog />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login setCurrentUser={setCurrentUser} />} />
       </Routes>
     </>
   );
 }
+
 
 // import { Routes, Route, Link } from "react-router-dom";
 // import Home from "./pages/Home";
