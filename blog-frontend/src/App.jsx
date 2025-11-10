@@ -1,20 +1,17 @@
-import { Routes, Route, Link } from "react-router-dom";
-import Home from "./pages/Home";
-import Blogs from "./pages/Blogs";
-import CreateBlog from "./pages/CreateBlog";
-import EditBlog from "./pages/EditBlog";
-import Login from "./pages/Login";
-import About from "./pages/About"; 
-import Contact from "./pages/Contact";
-
-import "./index.css";
+import { useState } from "react";
+import { Routes, Route, Link, useNavigate } from "react-router-dom";
 
 export default function App() {
-  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const navigate = useNavigate();
+
+  const [currentUser, setCurrentUser] = useState(
+    JSON.parse(localStorage.getItem("currentUser"))
+  );
 
   const handleLogout = () => {
     localStorage.removeItem("currentUser");
-    window.location.reload();
+    setCurrentUser(null);   // ✅ update state
+    navigate("/");          // ✅ redirect to homepage
   };
 
   return (
@@ -22,20 +19,16 @@ export default function App() {
       <nav className="navbar">
         <Link to="/">Home</Link>
         <Link to="/blogs">Blogs</Link>
-         <Link to="/about">About</Link> 
+        <Link to="/about">About</Link> 
         <Link to="/contact">Contact</Link>
 
         {!currentUser && <Link to="/login">Admin Login</Link>}
-        {currentUser && currentUser.role === "admin" && (
-  <>
-    <span className="user-badge">
-      Hi {currentUser.username || currentUser.email || "Admin"}
-    </span>
-    <button className="logout-btn" onClick={handleLogout}>Logout</button>
-  </>
-)}
-
-        
+        {currentUser?.role === "admin" && (
+          <>
+            <span className="user-badge">Hi {currentUser.username}</span>
+            <button className="logout-btn" onClick={handleLogout}>Logout</button>
+          </>
+        )}
       </nav>
 
       <Routes>
@@ -50,4 +43,56 @@ export default function App() {
     </>
   );
 }
+// import { Routes, Route, Link } from "react-router-dom";
+// import Home from "./pages/Home";
+// import Blogs from "./pages/Blogs";
+// import CreateBlog from "./pages/CreateBlog";
+// import EditBlog from "./pages/EditBlog";
+// import Login from "./pages/Login";
+// import About from "./pages/About"; 
+// import Contact from "./pages/Contact";
+
+// import "./index.css";
+
+// export default function App() {
+//   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+//   const handleLogout = () => {
+//     localStorage.removeItem("currentUser");
+//     window.location.reload();
+//   };
+
+//   return (
+//     <>
+//       <nav className="navbar">
+//         <Link to="/">Home</Link>
+//         <Link to="/blogs">Blogs</Link>
+//          <Link to="/about">About</Link> 
+//         <Link to="/contact">Contact</Link>
+
+//         {!currentUser && <Link to="/login">Admin Login</Link>}
+//         {currentUser && currentUser.role === "admin" && (
+//   <>
+//     <span className="user-badge">
+//       Hi {currentUser.username || currentUser.email || "Admin"}
+//     </span>
+//     <button className="logout-btn" onClick={handleLogout}>Logout</button>
+//   </>
+// )}
+
+        
+//       </nav>
+
+//       <Routes>
+//         <Route path="/" element={<Home />} />
+//         <Route path="/blogs" element={<Blogs />} />
+//         <Route path="/create" element={<CreateBlog />} />
+//         <Route path="/about" element={<About />} /> 
+//         <Route path="/contact" element={<Contact />} />
+//         <Route path="/edit/:id" element={<EditBlog />} />
+//         <Route path="/login" element={<Login />} />
+//       </Routes>
+//     </>
+//   );
+// }
 
