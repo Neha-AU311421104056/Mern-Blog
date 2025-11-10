@@ -21,7 +21,7 @@ export default function Login() {
       localStorage.setItem("currentUser", JSON.stringify(res.data.user));
       alert("Admin login successful!");
 
-      navigate("/blogs"); // ✅ FIXED
+      navigate(`${backendURL}/blogs`); // ✅ FIXED
     } catch (err) {
       console.error(err);
       alert(err.response?.data?.message || "Login failed");
