@@ -1,17 +1,23 @@
-import { useState } from "react";
 import { Routes, Route, Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import Home from "./pages/Home";
+import Blogs from "./pages/Blogs";
+import CreateBlog from "./pages/CreateBlog";
+import EditBlog from "./pages/EditBlog";
+import Login from "./pages/Login";
+import About from "./pages/About"; 
+import Contact from "./pages/Contact";
 
 export default function App() {
-  const navigate = useNavigate();
-
+  const navigate = useNavigate(); // ✅ useNavigate now works
   const [currentUser, setCurrentUser] = useState(
     JSON.parse(localStorage.getItem("currentUser"))
   );
 
   const handleLogout = () => {
     localStorage.removeItem("currentUser");
-    setCurrentUser(null);   // ✅ update state
-    navigate("/");          // ✅ redirect to homepage
+    setCurrentUser(null);
+    navigate("/"); // redirect to home
   };
 
   return (
@@ -26,7 +32,9 @@ export default function App() {
         {currentUser?.role === "admin" && (
           <>
             <span className="user-badge">Hi {currentUser.username}</span>
-            <button className="logout-btn" onClick={handleLogout}>Logout</button>
+            <button className="logout-btn" onClick={handleLogout}>
+              Logout
+            </button>
           </>
         )}
       </nav>
@@ -43,6 +51,7 @@ export default function App() {
     </>
   );
 }
+
 // import { Routes, Route, Link } from "react-router-dom";
 // import Home from "./pages/Home";
 // import Blogs from "./pages/Blogs";
