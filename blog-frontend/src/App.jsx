@@ -27,11 +27,14 @@ export default function App() {
 
         {!currentUser && <Link to="/login">Admin Login</Link>}
         {currentUser && currentUser.role === "admin" && (
-          <>
-            <span className="user-badge">Hi {currentUser.username}</span>
-            <button className="logout-btn" onClick={handleLogout}>Logout</button>
-          </>
-        )}
+  <>
+    <span className="user-badge">
+      Hi {currentUser.username || currentUser.email || "Admin"}
+    </span>
+    <button className="logout-btn" onClick={handleLogout}>Logout</button>
+  </>
+)}
+
         
       </nav>
 
